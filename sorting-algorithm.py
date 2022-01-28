@@ -10,6 +10,7 @@ class DrawInformation:
     WHITE = 255, 255, 255
     GREEN = 0, 255, 0
     RED = 255, 0, 0
+    BLUE = 0, 0, 255
     # sets background color to white
     BACKGROUND_COLOR = WHITE
     # creates gradient colors for bars
@@ -45,14 +46,14 @@ class DrawInformation:
 def draw(draw_info, algo_name, ascending):
     draw_info.window.fill(draw_info.BACKGROUND_COLOR)
     
-    title = draw_info.LARGE_FONT.render(f"{algo_name} - {'Ascending' if ascending else 'Descending'}", 1, draw_info.BLACK)
+    title = draw_info.LARGE_FONT.render(f"{algo_name} - {'Ascending' if ascending else 'Descending'}", 1, draw_info.BLUE)
     draw_info.window.blit(title, (draw_info.width / 2 - title.get_width() / 2, 5))
     
 
-    controls = draw_info.FONT.render("R - reset | SPACE - start sorting | A - ascending | D - descending", 1, draw_info.BLACK)
+    controls = draw_info.FONT.render("R - reset | SPACE - start sorting | A - ascending | D - descending | U - ↑ speed | L - ↓ speed", 1, draw_info.BLACK)
     draw_info.window.blit(controls, (draw_info.width / 2 - controls.get_width() / 2, 45))
     
-    sorting = draw_info.FONT.render("I - insertion sort | B - bubble sort", 1, draw_info.BLACK)
+    sorting = draw_info.FONT.render("B - bubble sort | I - insertion sort | S  - selection sort | Q - quick sort | M - merge sort | B - bogo sort", 1, draw_info.BLACK)
     draw_info.window.blit(sorting, (draw_info.width / 2 - sorting.get_width() / 2, 75))
     
     draw_list(draw_info)
@@ -132,10 +133,11 @@ def main():
     sorting_algo = bubble_sort
     sorting_algo_name = "Bubble Sort"
     sorting_algo_generator = None
+    speed = 8
 
     while run:
         # Clock that regulates how many loops run per second
-        clock.tick(7)
+        clock.tick(speed)
 
         if sorting:
             try:
@@ -157,6 +159,11 @@ def main():
                 lst = generate_starting_list(n, min_val, max_val)
                 draw_info.set_list(lst)
                 sorting = False
+            elif event.key == pygame.K_u:
+                speed += 2
+            elif event.key == pygame.K_l:
+                if speed > 2:
+                    speed -= 2
             # pressing "space" key sorts
             elif event.key == pygame.K_SPACE and sorting == False:
                 sorting = True
