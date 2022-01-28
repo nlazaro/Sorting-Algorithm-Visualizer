@@ -1,6 +1,5 @@
 import random
 import pygame
-import math
 
 pygame.init()
 
@@ -37,7 +36,7 @@ class DrawInformation:
         self.min_val = min(lst)
         self.max_val = max(lst)
         self.block_width = round((self.width - self.SIDE_PAD) / len(lst))
-        self.block_height = math.floor((self.height - self.TOP_PAD) / (self.max_val - self.min_val))
+        self.block_height = int((self.height - self.TOP_PAD) / (self.max_val - self.min_val))
         self.start_x = self.SIDE_PAD // 2
         # self.start_y = self.TOP_PAD // 2
 
