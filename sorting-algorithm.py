@@ -128,6 +128,7 @@ def main():
     run = True
     sorting = False
     ascending = True
+    # default is bubble sort and ascending
     sorting_algo = bubble_sort
     sorting_algo_name = "Bubble Sort"
     sorting_algo_generator = None
