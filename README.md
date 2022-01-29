@@ -9,4 +9,4 @@ Requires the pygame library
 
 `pip install pygame`
 
-<img src="sortingalgodemo.gif">
+<img src="sortalgodemo.gif">
