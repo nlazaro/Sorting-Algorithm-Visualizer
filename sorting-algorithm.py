@@ -52,7 +52,7 @@ def draw(draw_info, algo_name, ascending):
     controls = draw_info.FONT.render("R - reset | SPACE - start sorting | A - ascending | D - descending | U - ↑ speed | L - ↓ speed", 1, draw_info.BLACK)
     draw_info.window.blit(controls, (draw_info.width / 2 - controls.get_width() / 2, 45))
     
-    sorting = draw_info.FONT.render("B - bubble sort | I - insertion sort | S  - selection sort | Q - quick sort | M - merge sort | B - bogo sort", 1, draw_info.BLACK)
+    sorting = draw_info.FONT.render("B - bubble sort | I - insertion sort | S  - selection sort | Q - quick sort | M - merge sort | O - bogo sort", 1, draw_info.BLACK)
     draw_info.window.blit(sorting, (draw_info.width / 2 - sorting.get_width() / 2, 75))
     
     draw_list(draw_info)
@@ -114,6 +114,97 @@ def insertion_sort(draw_info, ascending=True):
             yield True
     return lst
 
+
+# selection sort
+def selection_sort(draw_info, ascending=True):
+    lst = draw_info.lst
+    for i in range(len(lst) - 1):
+        minIndex = i
+        for j in range(i + 1, len(lst)):
+            if lst[j] < lst[minIndex]:
+                minIndex = j
+            if minIndex != i:
+                lst[i], lst[minIndex] = lst[minIndex], lst[i]
+            draw_list(draw_info, {i: draw_info.RED, minIndex: draw_info.GREEN}, True)
+            yield True
+    return lst
+
+
+# quick sort
+def quick_sort(draw_info, ascending=True):
+    lst = draw_info.lst
+    lowIndex = lst[0]
+    highIndex = lst[-1]
+    if((highIndex - lowIndex) > 0):
+        p = partition(lst, lowIndex, highIndex)
+        quick_sort(lst, lowIndex, p - 1)
+        quick_sort(lst, p + 1, highIndex)
+    return lst
+
+# quick sort part 2
+def partition(lst, low, high, draw_info, ascending=True):
+    divider = low
+    pivot = high
+    for i in range(low, high):
+        if(lst[i] < lst[pivot]):
+            lst[i], lst[divider] = lst[divider], lst[i]
+            divider += 1
+        draw_list(draw_info, {i: draw_info.RED, divider: draw_info.GREEN}, True)
+        yield True
+    lst[pivot], lst[divider] = lst[divider], lst[pivot]
+    return divider
+
+
+# merge sort
+def merge_sort(draw_info, ascending=True):
+    lst = draw_info.lst
+    if len(lst) > 1:
+        left_arr = lst[ : len(lst) // 2]
+        right_arr = lst[len(lst) // 2 : ]
+        
+        merge_sort(left_arr)
+        merge_sort(right_arr)
+
+        i = 0
+        j = 0
+        k = 0
+        while i < len(left_arr) and j < len(right_arr):
+            if left_arr[i] < right_arr[j]:
+                lst[k] = left_arr[i]
+                i += 1
+            else:
+                lst[k] = right_arr[j]
+                j += 1
+            k += 1
+        while i < len(left_arr):
+            lst[k]  = left_arr[i]
+            i += 1
+            k += 1
+        while j < len(right_arr):
+            lst[k] = right_arr[j]
+            j += 1
+            k += 1
+        draw_list(draw_info, {i: draw_info.RED, j: draw_info.GREEN}, True)
+        yield True
+    return lst
+
+
+
+# bogo sort
+def bogo_sort(draw_info, ascending=True):
+    lst = draw_info.lst
+    current = 0
+    while True:
+        val = random.randint(0, len(lst) - 1)
+        if current < val - 1:
+            random.shuffle(lst)
+            draw_list(draw_info, {current: draw_info.GREEN, val: draw_info.RED}, True)
+            yield True
+        if current == len(lst) - 1:
+            break
+    return lst
+
+
 # main body of program
 def main():
     clock = pygame.time.Clock()
@@ -173,15 +264,30 @@ def main():
             # pressing "d" key descends
             elif event.key == pygame.K_d and not sorting:
                 ascending = False
-            # pressing "i" key descends
+            # pressing "i" key for insertion sort
             elif event.key == pygame.K_i and not sorting:
                 sorting_algo = insertion_sort
                 sorting_algo_name = "Insertion Sort"
-            # pressing "b" key descends
+            # pressing "b" key for bubble sort
             elif event.key == pygame.K_b and not sorting:
                 sorting_algo = bubble_sort
                 sorting_algo_name = "Bubble Sort"
-
+            # pressing "s" key for selection sort
+            elif event.key == pygame.K_s and not sorting:
+                sorting_algo = selection_sort
+                sorting_algo_name = "Selection Sort"
+            # pressing "q" key for quick sort
+            elif event.key == pygame.K_q and not sorting:
+                sorting_algo = quick_sort
+                sorting_algo_name = "Quick Sort"
+            # pressing "m" key for merge sort
+            elif event.key == pygame.K_m and not sorting:
+                sorting_algo = merge_sort
+                sorting_algo_name = "Merge Sort"
+            # pressing "o" key for bogo sort
+            elif event.key == pygame.K_o and not sorting:
+                sorting_algo = bogo_sort
+                sorting_algo_name = "Bogo Sort"
 
     pygame.quit()
 
